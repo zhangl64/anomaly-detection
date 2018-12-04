@@ -34,7 +34,7 @@ def get_data(filename, col_val, col_bool, time_steps=None):
         # reduce y to the max value on each row only
         y = np.amax(y, axis=1)
         # reshape y to 3D for LSTM
-        y = np.reshape(y, (y.shape[0], 1, 1))
+        # y = np.reshape(y, (y.shape[0], 1, 1))
 
     return x, y
 
@@ -71,8 +71,8 @@ def build_model(sequence, time_steps, data_dim):
         model.add(Dropout(0.2))
 
     # cnn
-    #model.add(Conv1D(filters=256, kernel_size=5, padding='same', activation='relu'))
-    #model.add(GlobalMaxPool1D())
+    model.add(Conv1D(filters=256, kernel_size=5, padding='same', activation='relu'))
+    model.add(GlobalMaxPool1D())
 
     # output layer
     model.add(Dense(1, activation='linear'))
