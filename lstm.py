@@ -4,7 +4,10 @@
 # This is an LSTM RNN model for anomaly detection in time series
 # Author: Lei Zhang; Email: leizhang@ryerson.ca
 
-# todo: CNN as the input layer; change time steps; change the label policy between max and last
+# todo: CNN as the input layer;
+# todo: change time steps (sliding window with step size = 1);
+# todo: change the label policy between max and last
+# todo: change the output from 1D to time_steps*D
 
 from pandas import read_csv
 from keras.models import Sequential
