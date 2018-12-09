@@ -5,7 +5,6 @@
 # Author: Lei Zhang; Email: leizhang@ryerson.ca
 
 # todo: CNN as the input layer;
-# todo: change time steps (sliding window with step size = 1);
 # todo: change the label policy between max and last
 # todo: change the output from 1D to time_steps*D
 
@@ -29,17 +28,23 @@ def get_data(filename, col_val, col_bool, time_steps=None):
 
     if time_steps is None:
         # reshape x to 3D: samples, time_steps, and features
-        x = np.reshape(x, (x.shape[0], 1, x.shape[1]))  # change 2D to 3D
-        # y = np.reshape(y, (y.shape[0], 1, y.shape[1])) # change 2D to 3D
+        x_reshape = np.reshape(x, (x.shape[0], 1, x.shape[1]))  # change 2D to 3D
+        # y = np.reshape(y, (y.shape[0], 1, y.shape[1])) # chan  ge 2D to 3D
     else:
-        x = np.reshape(x, (int(x.shape[0]/time_steps), time_steps, x.shape[1]))  # change 2D to 3D
-        y = np.reshape(y, (int(y.shape[0]/time_steps), time_steps))
-        # reduce y to the max value on each row only
-        y = np.amax(y, axis=1)
-        # reshape y to 3D for LSTM
-        # y = np.reshape(y, (y.shape[0], 1, 1))
+        # x = np.reshape(x, (int(x.shape[0]/time_steps), time_steps, x.shape[1]))  # change 2D to 3D
+        # reshape x into a 2d array with column_size = time_steps, then reshape x into a 3d array
+        x_reshape = np.zeros([x.shape[0]-time_steps+1, time_steps])
+        for i in range(0, x_reshape.shape[0]):
+            for j in range(0, time_steps):
+                x_reshape[i][j] = x[i+j]
+        x_reshape = np.reshape(x_reshape, (x_reshape.shape[0], x_reshape.shape[1], 1))
+        # truncate y
+        y = y[time_steps-1:]
+        # reshape y to 2d, and get the max of each row
+        # y = np.reshape(y, (int(y.shape[0]/time_steps), time_steps))
+        # y = np.amax(y, axis=1)
 
-    return x, y
+    return x_reshape, y
 
 
 # combine multiple datasets
