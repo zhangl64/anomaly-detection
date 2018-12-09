@@ -218,15 +218,19 @@ def plot_confusion_matrix(cm, classes,
 
 # main
 def main():
+    time_steps = 4
+    sequence = 52
+    iteration = 150
+    batch = 10
+
     # create data
     # x_train, y_train = get_multi_data('../datasets/webscope/A3Benchmark/A3Benchmark-TS', 'value', 'anomaly', 1, 100)
     # x_test, y_test = get_data('../datasets/webscope/A3Benchmark/A3Benchmark-TS100.csv', 'value', 'anomaly')
-    time_steps = 4
     x_train, y_train = get_data('~/Projects/IBM/simulator/mem_train.csv', 'mem', 'label', time_steps)
     x_test, y_test = get_data('~/Projects/IBM/simulator/mem_test.csv', 'mem', 'label', time_steps)
 
     # build the model
-    sequence = 52
+
     time_steps = x_train.shape[1]
     # time_steps = 10
     data_dim = x_train.shape[2]
@@ -239,7 +243,7 @@ def main():
     ratio = (y_train.shape[0] - class_1) / class_1
     class_weight_dict = {0: 1, 1: ratio}
 
-    history = model.fit(x_train, y_train, epochs=150, batch_size=10, verbose=2,
+    history = model.fit(x_train, y_train, epochs=iteration, batch_size=batch, verbose=2,
                         sample_weight=generate_sample_weights(y_train, class_weight_dict), validation_split=0.1)
 
     # evaluate the model
