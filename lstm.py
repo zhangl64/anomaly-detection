@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import itertools
+from attention_decoder import AttentionDecoder
 
 
 # create datasets
@@ -81,7 +82,7 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
     # model.add(GlobalMaxPool1D())
     model.add(MaxPooling1D(pool_size=time_steps, strides=1))
 
-    # lstm
+    # lstm or gru based on input parameters
     for i in range(2):
         if lstm is not None and gru is None:
             model.add(LSTM(neuron, dropout=0.2, recurrent_dropout=0.2, return_sequences=True))
@@ -279,9 +280,7 @@ def main():
     plot_confusion_matrix(cm, classes=target_names,
                           title='Confusion matrix')
 
-    print('succeed')
 
-
-if __name__ == '__main__':
-    main()
+main()
+print('succeed')
 
