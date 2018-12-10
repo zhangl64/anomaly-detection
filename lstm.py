@@ -94,7 +94,7 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
             return False
 
     # attention decoder
-    model.add(AttentionDecoder(neuron, data_dim))
+    # model.add(AttentionDecoder(neuron, data_dim))
 
     # output layer
     model.add(Dense(1, activation='linear'))
@@ -231,8 +231,8 @@ def plot_confusion_matrix(cm, classes,
 def main():
     time_steps = 4
     sequence = 52
-    iteration = 100
-    batch = 10
+    epoch = 300
+    batch = 50
 
     # create data
     # x_train, y_train = get_multi_data('../datasets/webscope/A3Benchmark/A3Benchmark-TS', 'value', 'anomaly', 1, 100)
@@ -256,7 +256,7 @@ def main():
     ratio = (y_train.shape[0] - class_1) / class_1
     class_weight_dict = {0: 1, 1: ratio}
 
-    history = model.fit(x_train, y_train, epochs=iteration, batch_size=batch, verbose=2,
+    history = model.fit(x_train, y_train, epochs=epoch, batch_size=batch, verbose=2,
                         sample_weight=generate_sample_weights(y_train, class_weight_dict), validation_split=0.1)
 
     # evaluate the model
