@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import itertools
 from attention_decoder import AttentionDecoder
+from attention_wrapper import Attention
 
 
 # create datasets
@@ -227,7 +228,7 @@ def plot_confusion_matrix(cm, classes,
 def main():
     time_steps = 4
     sequence = 52
-    iteration = 150
+    iteration = 100
     batch = 10
 
     # create data
