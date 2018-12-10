@@ -93,6 +93,9 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
             print("You need to specify which RNN to use.")
             return False
 
+    # attention decoder
+    model.add(AttentionDecoder(neuron, data_dim))
+
     # output layer
     model.add(Dense(1, activation='linear'))
     model.compile(loss='mse', optimizer='adam', metrics=['mse', 'mae', 'mape'])
