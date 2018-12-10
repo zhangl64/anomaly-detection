@@ -9,7 +9,7 @@
 
 from pandas import read_csv
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Conv1D, MaxPooling1D, GlobalMaxPool1D
+from keras.layers import Dense, LSTM, Conv1D, GRU, MaxPooling1D, GlobalMaxPool1D
 from keras.layers.core import Dropout
 import numpy as np
 import matplotlib.pyplot as plt
@@ -71,7 +71,7 @@ def get_multi_data(fileprefix, col_val, col_bool, start, end):
 
 
 # build the model of cnn+lstm
-def build_cnn_lstm(sequence, time_steps, data_dim):
+def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
     neuron = int(sequence / time_steps)
 
     model = Sequential()
@@ -83,7 +83,13 @@ def build_cnn_lstm(sequence, time_steps, data_dim):
 
     # lstm
     for i in range(2):
-        model.add(LSTM(neuron, dropout=0.2, recurrent_dropout=0.2, return_sequences=True))
+        if lstm is not None and gru is None:
+            model.add(LSTM(neuron, dropout=0.2, recurrent_dropout=0.2, return_sequences=True))
+        elif gru is not None and lstm is None:
+            model.add(GRU(neuron, dropout=0.2, recurrent_dropout=0.2, return_sequences=True))
+        else:
+            print("You need to specify which RNN to use.")
+            return False
 
     # output layer
     model.add(Dense(1, activation='linear'))
@@ -234,7 +240,9 @@ def main():
     time_steps = x_train.shape[1]
     # time_steps = 10
     data_dim = x_train.shape[2]
-    model = build_cnn_lstm(sequence, time_steps, data_dim)
+    model = build_cnn_rnn(sequence, time_steps, data_dim, lstm=True)
+    if model is False:
+        return
 
     # fit the model
     # class_weight does not support for 3+ dimensional targets
