@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import itertools
 from attention_decoder import AttentionDecoder
-from attention_wrapper import Attention
 
 
 # create datasets
@@ -78,8 +77,8 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
 
     model = Sequential()
 
-    # cnn
-    model.add(Conv1D(filters=sequence, input_shape=(time_steps, data_dim), kernel_size=5, padding='same', activation='relu'))
+    # cnn, creating 52 different filters, each of them has length 10.
+    model.add(Conv1D(filters=sequence, input_shape=(time_steps, data_dim), kernel_size=10, padding='same', activation='relu'))
     # model.add(GlobalMaxPool1D())
     model.add(MaxPooling1D(pool_size=time_steps, strides=1))
 
@@ -231,7 +230,7 @@ def plot_confusion_matrix(cm, classes,
 def main():
     time_steps = 4
     sequence = 52
-    epoch = 300
+    epoch = 400
     batch = 50
 
     # create data
@@ -241,11 +240,10 @@ def main():
     x_test, y_test = get_data('~/Projects/IBM/simulator/mem_test.csv', 'mem', 'label', time_steps)
 
     # build the model
-
     time_steps = x_train.shape[1]
     # time_steps = 10
     data_dim = x_train.shape[2]
-    model = build_cnn_rnn(sequence, time_steps, data_dim, lstm=True)
+    model = build_cnn_rnn(sequence, time_steps, data_dim, gru=True)
     if model is False:
         return
 
