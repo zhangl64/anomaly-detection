@@ -44,8 +44,8 @@ def get_data(filename, col_val, col_bool, time_steps, split=None):
                 x_reshape[i][j] = x[i+j]
         x_reshape = np.reshape(x_reshape, (x_reshape.shape[0], x_reshape.shape[1], 1))
         # truncate y
-        y = y[time_steps-1:]
-        y_reshape = np.reshape(y, (y.shape[0], 1, 1))
+        y_reshape = y[time_steps-1:]
+        y_reshape = np.reshape(y_reshape, (y_reshape.shape[0], 1, 1))
         # reshape y to 2d, and get the max of each row
         # y = np.reshape(y, (int(y.shape[0]/time_steps), time_steps))
         # y = np.amax(y, axis=1)
@@ -113,13 +113,14 @@ def build_lstm_cnn(sequence, time_steps, data_dim):
     model.add(Dropout(0.2))
 
     # hidden layers
-    for i in range(2):
-        model.add(LSTM(sequence, return_sequences=True))
-        model.add(Dropout(0.2))
+    #for i in range(2):
+    #    model.add(LSTM(sequence, return_sequences=True))
+    #    model.add(Dropout(0.2))
 
     # cnn
     model.add(Conv1D(filters=256, kernel_size=5, padding='same', activation='relu'))
-    model.add(GlobalMaxPool1D())
+    # model.add(GlobalMaxPool1D())
+    model.add(MaxPooling1D(pool_size=time_steps, strides=1))
 
     # output layer
     model.add(Dense(1, activation='linear'))
