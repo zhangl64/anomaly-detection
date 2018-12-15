@@ -237,8 +237,8 @@ def main():
     # create data
     # x_train, y_train = get_multi_data('../datasets/webscope/A3Benchmark/A3Benchmark-TS', 'value', 'anomaly', 1, 100)
     # x_test, y_test = get_data('../datasets/webscope/A3Benchmark/A3Benchmark-TS100.csv', 'value', 'anomaly')
-    x_train, y_train = get_data('~/Projects/IBM/simulator/mem_train.csv', 'mem', 'label', time_steps)
-    x_test, y_test = get_data('~/Projects/IBM/simulator/mem_test.csv', 'mem', 'label', time_steps)
+    x_train, y_train = get_data('~/Projects/IBM/simulator/mem_train.csv', 'mem.10', 'label', time_steps)
+    x_test, y_test = get_data('~/Projects/IBM/simulator/mem_test.csv', 'mem.10', 'label', time_steps)
 
     # build the model
     time_steps = x_train.shape[1]
