@@ -34,7 +34,7 @@ def get_data(filename, col_val, col_bool, time_steps, split=None):
         y = np.reshape(y, (int(y.shape[0] / time_steps), time_steps))
         # reduce y to the max value on each row only
         y = np.amax(y, axis=1)
-        y = np.reshape(y, (y.shape[0], 1, 1))
+        y_reshape = np.reshape(y, (y.shape[0], 1, 1))
     else:
         # x = np.reshape(x, (int(x.shape[0]/time_steps), time_steps, x.shape[1]))  # change 2D to 3D
         # reshape x into a 2d array with column_size = time_steps, then reshape x into a 3d array
@@ -45,12 +45,12 @@ def get_data(filename, col_val, col_bool, time_steps, split=None):
         x_reshape = np.reshape(x_reshape, (x_reshape.shape[0], x_reshape.shape[1], 1))
         # truncate y
         y = y[time_steps-1:]
-        y = np.reshape(y, (y.shape[0], 1, 1))
+        y_reshape = np.reshape(y, (y.shape[0], 1, 1))
         # reshape y to 2d, and get the max of each row
         # y = np.reshape(y, (int(y.shape[0]/time_steps), time_steps))
         # y = np.amax(y, axis=1)
 
-    return x_reshape, y
+    return x_reshape, y_reshape
 
 
 # combine multiple datasets
@@ -83,7 +83,7 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
     model.add(MaxPooling1D(pool_size=time_steps, strides=1))
 
     # lstm or gru based on input parameters
-    for i in range(2):
+    for i in range(1):
         if lstm is not None and gru is None:
             model.add(LSTM(neuron, dropout=0.2, recurrent_dropout=0.2, return_sequences=True))
         elif gru is not None and lstm is None:
@@ -96,7 +96,7 @@ def build_cnn_rnn(sequence, time_steps, data_dim, lstm=None, gru=None):
     # model.add(AttentionDecoder(neuron, data_dim))
 
     # output layer
-    model.add(Dense(1, activation='linear'))
+    model.add(Dense(units=1, activation='linear'))
     model.compile(loss='mse', optimizer='adam', metrics=['mse', 'mae', 'mape'])
 
     # output shape: 1st dimension - batch size.
@@ -130,14 +130,14 @@ def build_lstm_cnn(sequence, time_steps, data_dim):
 
 
 # generate sample weights based on y_train and class_weight_dict
-def generate_sample_weights(training_data, class_weight_dictionary):
+def generate_sample_weights(y_train, class_weight_dict):
     # sample_weights = [class_weight_dictionary[np.where(one_hot_row == 1)[0][0]] for one_hot_row in training_data]
-    sample_weights = np.zeros(training_data.shape[0])
-    for i in range(training_data.shape[0]):
-        if training_data[i] == 0:
-            sample_weights[i] = class_weight_dictionary[0]
+    sample_weights = np.zeros(y_train.shape[0])
+    for i in range(y_train.shape[0]):
+        if y_train[i] == 0:
+            sample_weights[i] = class_weight_dict[0]
         else:
-            sample_weights[i] = class_weight_dictionary[1]
+            sample_weights[i] = class_weight_dict[1]
 
     return np.asarray(sample_weights)
 
@@ -156,7 +156,7 @@ def pro_plot(x_test, predictions, y_test, rounded, loss_fun, mse_fun):
     plt.title('model mse')
     plt.ylabel('mse')
     plt.xlabel('epoch')
-    plt.legend(['train'], loc='lower right')
+    plt.legend(['train'], loc='upper right')
     plt.show()
     # plot x_test
     x_plt = np.squeeze(x_test)
@@ -230,7 +230,7 @@ def plot_confusion_matrix(cm, classes,
 def main():
     time_steps = 4
     sequence = 52
-    epoch = 400
+    epoch = 500
     batch = 50
 
     # create data
