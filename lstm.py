@@ -27,6 +27,11 @@ def get_data(filename, col_val, col_bool, time_steps, split=None):
     y = dataframe[[col_bool]].values
 
     if split is not None:
+        # remove remainders
+        remainder = x.shape[0] % time_steps
+        if remainder > 0:
+            x = np.delete(x, np.s_[x.shape[0] - remainder:x.shape[0]], 0)
+            y = np.delete(y, np.s_[y.shape[0] - remainder:y.shape[0]], 0)
         # reshape x to 3D: samples, time_steps, and features
         # x_reshape = np.reshape(x, (x.shape[0], 1, x.shape[1]))  # change 2D to 3D
         # y = np.reshape(y, (y.shape[0], 1, y.shape[1])) # chan  ge 2D to 3D
@@ -229,7 +234,7 @@ def plot_confusion_matrix(cm, classes,
 
 # main
 def main():
-    time_steps = 4
+    time_steps = 10
     sequence = 52
     epoch = 500
     batch = 50

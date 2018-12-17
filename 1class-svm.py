@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# This is a one class support vector machine (svm) model for anomaly detection in time series
-# Author: Lei Zhang; Email: leizhang@ryerson.ca
+# This is an example of using one class support vector machine (svm) model for anomaly detection in time series
 # The temperature example is downloaded from https://www.kaggle.com/victorambonati/unsupervised-anomaly-detection
 
 from sklearn import preprocessing
