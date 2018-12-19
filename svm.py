@@ -4,7 +4,6 @@
 # This is a one class support vector machine (svm) model for anomaly detection in time series
 # Author: Lei Zhang; Email: leizhang@ryerson.ca
 
-
 from sklearn import preprocessing
 from sklearn.svm import OneClassSVM
 from pandas import read_csv, to_datetime, DataFrame, Series
