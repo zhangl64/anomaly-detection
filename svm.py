@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # read and understand data
-df = read_csv("~/Projects/IBM/simulator/cpu_train_normal.csv", index_col=0)
+df = read_csv("~/Projects/IBM/simulator/cpu_train.csv", index_col=0)
 # set index as time
 df = df.reset_index()
 df = df.rename(columns={"index": "time"})
@@ -36,7 +36,8 @@ data = DataFrame(np_scaled)
 
 # train the model
 outliers_fraction = 0.01
-model = OneClassSVM(nu=0.95 * outliers_fraction)
+# model = OneClassSVM(nu=0.95 * outliers_fraction)
+model = OneClassSVM(nu=outliers_fraction)
 model.fit(data)
 
 # add the data to the main
