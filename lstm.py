@@ -17,7 +17,6 @@ from sklearn.metrics import confusion_matrix
 import itertools
 from attention_decoder import AttentionDecoder
 
-
 # create datasets
 # x - time series (timestamp and variables)
 # y - anomaly or normal (boolean)
@@ -276,8 +275,11 @@ def main():
     rounded = np.array(rounded)
     # y_test = np.squeeze(y_test)
 
+    print(history.history.keys()) #
+
     loss_fun = history.history['loss']
-    mse_fun = history.history['mean_squared_error']
+    # mean_squared_error is replaced by mse
+    mse_fun = history.history['mse']
     pro_plot(x_test, predictions, y_test, rounded, loss_fun, mse_fun)
 
     # plot the confusion matrix
@@ -287,7 +289,6 @@ def main():
     target_names = ['Normal', 'Anomaly']
     plot_confusion_matrix(cm, classes=target_names,
                           title='Confusion matrix')
-
 
 main()
 print('succeed')
